@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 50">
+  <text x="110" y="34" text-anchor="middle"
+    font-family="Inter, system-ui"
+    font-size="14"
+    font-weight="800"
+    letter-spacing="5"
+    fill="currentColor">CELSIUS</text>
+</svg>

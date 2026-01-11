@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 50" fill="none">
+  <path d="M70 27h100" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+  <text x="120" y="34" text-anchor="middle"
+    font-family="Inter, system-ui"
+    font-size="12"
+    font-weight="600"
+    letter-spacing="3"
+    fill="currentColor">COCA  COLA</text>
+</svg>
