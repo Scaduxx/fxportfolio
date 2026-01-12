@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import Navbar from "./components/Navbar"
 import MainShell from "./components/MainShell"
+import Footer from "./components/Footer"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,8 +39,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className={`bg-black text-white ${inter.className}`}>
+        {/* Page Navbar fixed */}
         <Navbar />
+
+        {/* Page content (with spacing + trsnitions) */}
         <MainShell>{children}</MainShell>
+
+        {/* Global footer */}
+        <Footer />
       </body>
     </html>
   )

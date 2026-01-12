@@ -123,7 +123,7 @@ export default async function ProjectPage({ params }: PageProps) {
   }
 
   return (
-    <main className="max-w-[1200px] mx-auto px-12 py-0">
+    <main className="max-w-[1200px] mx-auto px-4 py-0">
       {/* HERO */}
       <div className="w-full aspect-[12/2] bg-neutral-900 overflow-hidden mb-10">
         {project.mainImage && (

@@ -41,7 +41,7 @@ export default function AboutPage() {
     { name: "Casio", src: "/clients/casio.svg" },
     { name: "Nixon", src: "/clients/nixon.svg" },
     { name: "Modelo", src: "/clients/modelo.svg" },
-    
+
   ]
 
   useEffect(() => {
@@ -77,23 +77,13 @@ export default function AboutPage() {
         </p>
       </header>
 
-      {/* REEL BUTTON */}
-      <section className="mt-10 text-center">
-        <button
-          onClick={() => setOpenReel(true)}
-          className="text-lx uppercase tracking-widest text-white/60 hover:text-white transition"
-        >
-          ▶ Play Reel
-        </button>
-      </section>
-
       {/* FOCUS */}
-      <section className="mt-15 max-w-[760px] mx-auto text-center">
-        <h2 className="text-lx uppercase tracking-widest text-white/90 mb-6">
+      <section className="mt-10 max-w-[760px] mx-auto text-center">
+        {/*<h2 className="text-lx uppercase tracking-widest text-white/90 mb-6">
           Focus
-        </h2>
+        </h2>*/}
 
-        <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm uppercase tracking-wider text-white/60">
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm uppercase tracking-wider text-white/60">
           <span>FX / Sim</span>
           <span>R&amp;D</span>
           <span>CG / Lookdev</span>
@@ -103,32 +93,54 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* REEL BUTTON */}
+      <section className="mt-25 text-center">
+        <button
+          onClick={() => setOpenReel(true)}
+          className="
+            inline-flex items-center gap-3
+            px-6 py-3
+            text-base sm:text-lg
+            uppercase tracking-widest
+            text-white/80 hover:text-white
+            border border-white/20 hover:border-white/40
+            rounded-full
+            transition-all duration-300
+          "
+        >
+          <span className="text-lg">▶</span>
+          <span>Play Reel</span>
+        </button>
+      </section>
+
+
+
       {/* TOOLS */}
-      <section className="mt-15 max-w-[600px] mx-auto">
+      <section className="mt-25 max-w-[600px] mx-auto">
         <h2 className="text-lx uppercase tracking-widest text-white/90 mb-8 text-center">
           Tools
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 text-white/70">
-          <div className="flex gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 text-white/70">
+          <div className="flex gap-2">
             <span className="text-white/40 text-sm min-w-[100px] uppercase tracking-wider">
               3D
             </span>
             <span>Houdini / C4D / Blender</span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <span className="text-white/40 text-sm min-w-[100px] uppercase tracking-wider">
               Render
             </span>
             <span>Redshift / Karma</span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <span className="text-white/40 text-sm min-w-[100px] uppercase tracking-wider">
               Comp
             </span>
             <span>After Effects / Nuke</span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <span className="text-white/40 text-sm min-w-[100px] uppercase tracking-wider">
               Edit
             </span>
@@ -181,11 +193,11 @@ export default function AboutPage() {
           <p className="text-white/70 text-base leading-relaxed">
             I have a Bachelor in Computer Science, and over
             6 years of experience in the 3D industry.
-            
+
             I worked for 3 years at the Greek studio 3Deers, and another 2 years at
             the motion design studio AlreadyBeenChewed.
             Currently, I focus on freelancing and collaborating with studios and agencies worldwide.
-            
+
             My computer science background allows me to approach visual problems
             with a technical mindset — blending procedural workflows, simulation,
             and design-driven decisions to deliver refined, efficient results.
