@@ -1,6 +1,8 @@
 import { client, urlFor } from "@/lib/sanity";
 import ProjectGrid from "./components/ProjectGrid";
 
+export const revalidate = 60 // updates within 60 seconds
+
 export default async function HomePage() {
   // Fetch projects and order by 'order' (manual) and 'date' (newest first)
   const projects = await client.fetch(`
