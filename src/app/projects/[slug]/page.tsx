@@ -2,12 +2,90 @@ import { client, urlFor } from "@/lib/sanity"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { PortableText } from "@portabletext/react"
+import InstagramEmbed from "@/app/components/InstagramEmbed"
 
 type PageProps = {
   params: Promise<{ slug: string }>
 }
 
 const MIN_DATE = "1970-01-01T00:00:00Z"
+
+/* ---------------- VIDEO HELPERS START ---------------- */
+
+function isInstagram(url: string) {
+  return /instagram\.com\/(p|reel|tv)\//i.test(url)
+}
+
+function isYouTube(url: string) {
+  return /youtube\.com\/watch\?v=|youtu\.be\//i.test(url)
+}
+
+function isVimeo(url: string) {
+  return /vimeo\.com\//i.test(url)
+}
+
+function isGoogleDrive(url: string) {
+  return /drive\.google\.com\/file\/d\//i.test(url) || /drive\.google\.com\/open\?id=|uc\?id=/i.test(url)
+}
+
+function youtubeToEmbed(url: string) {
+  // youtu.be/<id>
+  const short = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/)
+  if (short?.[1]) return `https://www.youtube.com/embed/${short[1]}`
+
+  // youtube.com/watch?v=<id>
+  const long = url.match(/[?&]v=([A-Za-z0-9_-]+)/)
+  if (long?.[1]) return `https://www.youtube.com/embed/${long[1]}`
+
+  return url
+}
+
+function vimeoToEmbed(url: string) {
+  // Turn vimeo.com/<id> into player.vimeo.com/video/<id>
+  return url.replace("vimeo.com", "player.vimeo.com/video")
+}
+
+function driveToEmbed(url: string) {
+  const fileIdMatch =
+    url.match(/\/file\/d\/([^/]+)/) ||
+    url.match(/[?&]id=([^&]+)/) ||
+    url.match(/uc\?id=([^&]+)/)
+
+  const fileId = fileIdMatch?.[1]
+  if (!fileId) return url
+
+  return `https://drive.google.com/file/d/${fileId}/preview`
+}
+
+function normalizeInstagramUrl(url: string) {
+  // Instagram embed prefers a clean permalink without query junk
+  return url.split("?")[0]
+}
+
+function getVideoRenderPlan(videoUrl: string) {
+  const u = videoUrl.trim()
+
+  if (isInstagram(u)) {
+    return { kind: "instagram" as const, src: normalizeInstagramUrl(u) }
+  }
+
+  if (isYouTube(u)) {
+    return { kind: "iframe" as const, src: youtubeToEmbed(u) }
+  }
+
+  if (isVimeo(u)) {
+    return { kind: "iframe" as const, src: vimeoToEmbed(u) }
+  }
+
+  if (isGoogleDrive(u)) {
+    return { kind: "iframe" as const, src: driveToEmbed(u) }
+  }
+
+  // fallback: try iframe
+  return { kind: "iframe" as const, src: u }
+}
+
+/* ---------------- VIDEO HELPERS END ---------------- */
 
 export default async function ProjectPage({ params }: PageProps) {
   const { slug } = await params
@@ -18,10 +96,11 @@ export default async function ProjectPage({ params }: PageProps) {
       title,
       client,
       date,
-      vimeoLink,
+      videoUrl,
       mainImage,
       intro,
       labContent,
+      role,
       credits,
       links,
       "slug": slug.current,
@@ -84,7 +163,7 @@ export default async function ProjectPage({ params }: PageProps) {
   const totalLabel = String(total).padStart(2, "0")
 
   // PortableText: center paragraphs + headings, enforce font stack
-  // IMPORTANT: no `types.image` here, because we render images with our grid logic below
+  // IMPORTANT: no `types.image` here, because I render images with grid logic below
   const components = {
     block: {
       normal: ({ children }: any) => (
@@ -121,6 +200,12 @@ export default async function ProjectPage({ params }: PageProps) {
       ),
     },
   }
+
+  const videoPlan =
+    typeof project.videoUrl === "string" && project.videoUrl.trim().length > 0
+      ? getVideoRenderPlan(project.videoUrl)
+      : null
+
 
   return (
     <main className="max-w-[1200px] mx-auto px-4 py-0">
@@ -201,17 +286,24 @@ export default async function ProjectPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* VIMEO */}
-      {project.vimeoLink && (
+      {/* VIDEO */}
+      {videoPlan && (
         <section className="mt-14">
-          <div className="w-full aspect-video bg-neutral-900 overflow-hidden">
-            <iframe
-              src={project.vimeoLink.replace("vimeo.com", "player.vimeo.com/video")}
-              className="w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+          {/* Instagram is not an iframe - it is an embed script */}
+          {videoPlan.kind === "instagram" ? (
+            <div className="w-full bg-neutral-900/20 overflow-hidden rounded-xl border border-white/10 p-4">
+              <InstagramEmbed url={videoPlan.src} />
+            </div>
+          ) : (
+            <div className="w-full aspect-video bg-neutral-900 overflow-hidden">
+              <iframe
+                src={videoPlan.src}
+                className="w-full h-full"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
         </section>
       )}
 
@@ -221,6 +313,18 @@ export default async function ProjectPage({ params }: PageProps) {
           <ContentWithImageGrid content={project.labContent} components={components} />
         ) : null}
       </section>
+
+      {/* ROLE  */}  
+      {project.role && (
+        <section>
+        <h3 className="text-sm uppercase tracking-widest text-white/50 mb-8">
+            My Role
+          </h3>
+        <p className="mt-6 text-sm uppercase tracking-widest text-white/70">
+          {project.role}
+        </p>
+        </section>
+      )}
 
       {/* CREDITS*/}
       {project.credits?.length > 0 && (
